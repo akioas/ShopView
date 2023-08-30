@@ -24,7 +24,7 @@ class DetailsScreen: UIViewController {
         
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getDetails(_:)), name: Notification.Name.advertisments, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getDetails(_:)), name: Notification.Name.advertisements, object: nil)
         LoadController().getMainScreenData()
         
         
@@ -34,7 +34,7 @@ class DetailsScreen: UIViewController {
     
     @objc func getDetails(_ notification: Notification) {
         
-        guard let details = notification.userInfo?[Notification.Name.advertisments] as? (DetailsScreenData) else { return }
+        guard let details = notification.userInfo?[Notification.Name.advertisements] as? (DetailsScreenData) else { return }
         self.details = details
     
     }

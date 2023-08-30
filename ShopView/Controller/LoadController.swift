@@ -41,8 +41,8 @@ class LoadController {
                             do {
                                 let json = try JSONDecoder().decode(MainScreenData.self, from: data)
 
-                                let userInfo = [ Notification.Name.advertisments : json.advertisements ]
-                                NotificationCenter.default.post(name: .advertisments, object: nil, userInfo: userInfo as [AnyHashable : Any] )
+                                let userInfo = [ Notification.Name.advertisements : json.advertisements ]
+                                NotificationCenter.default.post(name: .advertisements, object: nil, userInfo: userInfo as [AnyHashable : Any] )
                             }
                             catch {
                                 self.sendError()
