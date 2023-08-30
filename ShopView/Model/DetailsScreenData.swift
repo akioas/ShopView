@@ -2,7 +2,7 @@ import Foundation
 
 
 struct DetailsScreenData: Decodable {
-    var id: Int?
+    var id: String?
     var title: String?
     var price: String?
     var location: String?

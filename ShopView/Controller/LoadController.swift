@@ -7,21 +7,29 @@ class LoadController {
     let detailsUrl = "https://www.avito.st/s/interns-ios/details/{itemId}.json"
     let replaceDetailsUrl = "{itemId}"
     
+    enum Screens {
+        case main
+        case details
+    }
+    
     func getMainScreenData() {
         let url = URL(string: mainUrl)!
-        var request = URLRequest(url: url)
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 20
-        let config = URLSessionConfiguration.default
-        makeRequest(request, config: config)
+        let request = URLRequest(url: url)
+        makeRequest(request, screen: .main)
+    }
+    
+    func getDetailsScreenData(id: String) {
+        let url = URL(string: detailsUrl.replacingOccurrences(of: replaceDetailsUrl, with: id))!
+        let request = URLRequest(url: url)
+        makeRequest(request, screen: .details)
     }
     
     func sendError() {
         NotificationCenter.default.post(name: .error, object: nil)
     }
     
-    func makeRequest(_ request: URLRequest, config: URLSessionConfiguration) {
-        
+    func makeRequest(_ request: URLRequest, screen: Screens) {
+        let config = URLSessionConfiguration.default
         
         let session = URLSession(configuration: config)
         session.dataTask(with: request) { (data, response, error) in
@@ -39,10 +47,16 @@ class LoadController {
                     if status == 200 {
                         if let data = data {
                             do {
-                                let json = try JSONDecoder().decode(MainScreenData.self, from: data)
-
-                                let userInfo = [ Notification.Name.advertisements : json.advertisements ]
-                                NotificationCenter.default.post(name: .advertisements, object: nil, userInfo: userInfo as [AnyHashable : Any] )
+                                switch screen {
+                                case .main:
+                                    let json = try JSONDecoder().decode(MainScreenData.self, from: data)
+                                    let userInfo = [ Notification.Name.advertisements : json.advertisements ]
+                                    NotificationCenter.default.post(name: .advertisements, object: nil, userInfo: userInfo as [AnyHashable : Any] )
+                                case .details:
+                                    let json = try JSONDecoder().decode(DetailsScreenData.self, from: data)
+                                    let userInfo = [ Notification.Name.details : json ]
+                                    NotificationCenter.default.post(name: .details, object: nil, userInfo: userInfo as [AnyHashable : Any] )
+                                }
                             }
                             catch {
                                 self.sendError()

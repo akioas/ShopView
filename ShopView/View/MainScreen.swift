@@ -8,8 +8,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     var mobileVersionLabel = UILabel()
     
     var offers: [Advertisement]?
-    
-    
+        
     override func viewWillAppear(_ animated: Bool) {
 
         if #available(iOS 16.0, *) {
@@ -29,7 +28,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getOffers(_:)), name: Notification.Name.advertisments, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getOffers(_:)), name: Notification.Name.advertisements, object: nil)
         LoadController().getMainScreenData()
         
         self.navigationController?.isNavigationBarHidden = true
@@ -78,15 +77,16 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         return layout
     }
    
-    @objc func toDetailsView() {
+    func toDetailsView(selectedId: String) {
         let vc = DetailsScreen()
+        vc.id = selectedId
         vc.modalPresentationStyle = .overFullScreen
         self.present(vc, animated: false)
     }
     
     @objc func getOffers(_ notification: Notification) {
         
-        guard let offers = notification.userInfo?[Notification.Name.advertisments] as? ([Advertisement]) else { return }
+        guard let offers = notification.userInfo?[Notification.Name.advertisements] as? ([Advertisement]) else { return }
         self.offers = offers
         self.collectionView.reloadData()
         print(offers)
@@ -109,7 +109,8 @@ extension MainScreen {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        let selectedId = offers?[indexPath.row].id ?? ""
+        toDetailsView(selectedId: selectedId)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
