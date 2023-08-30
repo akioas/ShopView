@@ -39,7 +39,6 @@ class LoadController {
                     if status == 200 {
                         if let data = data {
                             do {
-                                print(data)
                                 let json = try JSONDecoder().decode(MainScreenData.self, from: data)
 
                                 let userInfo = [ Notification.Name.advertisments : json.advertisements ]
@@ -47,13 +46,6 @@ class LoadController {
                             }
                             catch {
                                 self.sendError()
-                                do {
-                                    let json = try JSONSerialization.jsonObject(with: data)
-                                    print(json)
-                                }
-                                catch {
-                                    self.sendError()
-                                }
                             }
                         }
                         
@@ -68,5 +60,6 @@ class LoadController {
 }
 extension Notification.Name {
     public static let error = Notification.Name(rawValue: "error")
-    public static let advertisments = Notification.Name(rawValue: "advertisments")
+    public static let advertisements = Notification.Name(rawValue: "advertisements")
+    public static let details = Notification.Name(rawValue: "details")
 }

@@ -10,8 +10,6 @@ class ImageLoader: UIImageView {
 
     func loadImageWithUrl(_ url: URL) {
 
-        activityIndicator.color = .darkGray
-
         addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

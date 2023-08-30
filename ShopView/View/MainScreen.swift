@@ -77,16 +77,12 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         }
         return layout
     }
-   /*
-    @objc func getMyOffers(_ notification: Notification) {
-        guard let offers = notification.userInfo?[Notification.Name.advertisments] as? [Advertisement] else {
-            self.offers = []
-            self.collectionView.reloadData()
-            return
-        }
-        self.offers = offers
-        self.collectionView.reloadData()
-    }*/
+   
+    @objc func toDetailsView() {
+        let vc = DetailsScreen()
+        vc.modalPresentationStyle = .overFullScreen
+        self.present(vc, animated: false)
+    }
     
     @objc func getOffers(_ notification: Notification) {
         
@@ -152,15 +148,13 @@ extension MainScreen {
         let cell = UIView()
         let width = (self.view.frame.width/2) - 10
         let cellView = UIImageView()
-        cellView.frame = CGRect(x: 10, y: 0, width: width - 10, height: width - 10)
+        cellView.frame = CGRect(x: 10, y: 0, width: width - 30, height: width - 10)
         
-        let configuration = UIImage.SymbolConfiguration(pointSize: 200, weight: .regular, scale: .medium)
         let loader = ImageLoader()
         loader.frame = cellView.frame
         
         cellView.addSubview(loader)
 
-//        let placeholder = UIImage(systemName: "photo.fill", withConfiguration: configuration)
         if let imgUrl = offers?[index].image_url {
             loader.loadImageWithUrl(URL(string: imgUrl)!)
         }
@@ -171,18 +165,17 @@ extension MainScreen {
         secondLabel.frame = CGRect(x: 20, y: width + 22, width: width - 20, height: 20)
         thirdLabel.frame = CGRect(x: 20, y: width + 42, width: width - 20, height: 18)
     
-        firstLabel.font = .boldSystemFont(ofSize: 25)
-        secondLabel.text = offers?[index].title ?? ""
-        thirdLabel.text = offers?[index].price ?? ""
+        secondLabel.font = .boldSystemFont(ofSize: 15)
+        firstLabel.text = offers?[index].title ?? ""
+        secondLabel.text = offers?[index].price ?? ""
+        thirdLabel.text = offers?[index].location ?? ""
         thirdLabel.textColor = .gray
         
         cell.addSubview(cellView)
         cell.addSubview(firstLabel)
         cell.addSubview(secondLabel)
         cell.addSubview(thirdLabel)
-        print(cell.frame)
-        print(cellView.frame)
-        print(thirdLabel.frame)
+  
         return cell
     }
     

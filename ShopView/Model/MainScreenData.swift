@@ -2,7 +2,7 @@ import Foundation
 
 
 struct MainScreenData: Decodable {
-    var advertisements: [Advertisement]
+    var advertisements: [Advertisement]?
 }
 
 struct Advertisement: Decodable {
