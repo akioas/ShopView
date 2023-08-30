@@ -9,6 +9,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     var offers: [Advertisement]?
     
+    
     override func viewWillAppear(_ animated: Bool) {
 
         if #available(iOS 16.0, *) {
@@ -22,6 +23,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         }
         
     }
+    
     
     override func viewDidLoad() {
         
@@ -38,10 +40,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .white
-        let topTapbarPosition = tabBarController?.tabBar.frame.minY
-        let tabHeight = self.view.frame.height - (topTapbarPosition ?? 0)
-        collectionView.frame = CGRect.init(x: 0, y: 194, width: self.view.frame.width, height: self.view.frame.height - 194 - tabHeight)
-        print(self.view.frame.height)
+        collectionView.frame = CGRect.init(x: 0, y: 44, width: self.view.frame.width, height: self.view.frame.height - 44 )
         view.addSubview(collectionView)
     
     }
@@ -156,15 +155,15 @@ extension MainScreen {
         cellView.frame = CGRect(x: 10, y: 0, width: width - 10, height: width - 10)
         
         let configuration = UIImage.SymbolConfiguration(pointSize: 200, weight: .regular, scale: .medium)
-        let placeholder = UIImage(systemName: "photo.fill", withConfiguration: configuration)
-//        if let imgUrl = offers?[index].imageUrl {
-//            cellView.af_setImage(withURL: GetOffersController().getOfferUrl(name: imgUrl), placeholderImage: placeholder, filter: AspectScaledToFillSizeWithRoundedCornersFilter(size: cellView.frame.size, radius: 20.0))
-//        } else {
-//            cellView.image = placeholder
-//            cellView.layer.cornerRadius = 20
-//        }
-        cellView.image = placeholder
-                    cellView.layer.cornerRadius = 20
+        let loader = ImageLoader()
+        loader.frame = cellView.frame
+        
+        cellView.addSubview(loader)
+
+//        let placeholder = UIImage(systemName: "photo.fill", withConfiguration: configuration)
+        if let imgUrl = offers?[index].image_url {
+            loader.loadImageWithUrl(URL(string: imgUrl)!)
+        }
         let firstLabel = UILabel()
         let secondLabel = UILabel()
         let thirdLabel = UILabel()
