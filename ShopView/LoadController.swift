@@ -16,16 +16,22 @@ class LoadController {
         makeRequest(request, config: config)
     }
     
+    func sendError() {
+        NotificationCenter.default.post(name: .error, object: nil)
+    }
+    
     func makeRequest(_ request: URLRequest, config: URLSessionConfiguration) {
+        
+        
         let session = URLSession(configuration: config)
         session.dataTask(with: request) { (data, response, error) in
             DispatchQueue.main.async {
                 guard error == nil else {
-                    print(error)
+                    self.sendError()
                     return
                 }
                 guard let _ = data else {
-                    print("Response Data is empty")
+                    self.sendError()
                     return
                 }
                 if let httpResponse = response as? HTTPURLResponse {
@@ -33,27 +39,34 @@ class LoadController {
                     if status == 200 {
                         if let data = data {
                             do {
+                                print(data)
                                 let json = try JSONDecoder().decode(MainScreenData.self, from: data)
-                                print(json)
+
+                                let userInfo = [ Notification.Name.advertisments : json.advertisements ]
+                                NotificationCenter.default.post(name: .advertisments, object: nil, userInfo: userInfo as [AnyHashable : Any] )
                             }
                             catch {
-                                print("Error")
+                                self.sendError()
                                 do {
                                     let json = try JSONSerialization.jsonObject(with: data)
                                     print(json)
                                 }
                                 catch {
-                                    print("Error")
+                                    self.sendError()
                                 }
                             }
                         }
                         
                     } else {
-                        print("Error")
+                        self.sendError()
                     }
                 }
             }
         }.resume()
     }
     
+}
+extension Notification.Name {
+    public static let error = Notification.Name(rawValue: "error")
+    public static let advertisments = Notification.Name(rawValue: "advertisments")
 }
