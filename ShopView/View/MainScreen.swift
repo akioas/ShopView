@@ -43,6 +43,15 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         view.addSubview(collectionView)
     
     }
+    
+    func setupLoadView() {
+        
+    }
+    
+    func setupErrorView() {
+        
+    }
+    
     func createLayout() -> UICollectionViewLayout {
         
         let layout = UICollectionViewCompositionalLayout {

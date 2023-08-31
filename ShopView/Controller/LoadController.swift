@@ -50,7 +50,7 @@ class LoadController {
                                 switch screen {
                                 case .main:
                                     let json = try JSONDecoder().decode(MainScreenData.self, from: data)
-                                    let userInfo = [ Notification.Name.advertisements : json.advertisements ]
+                                    let userInfo = [ Notification.Name.advertisements : json.advertisements?.sorted{$0.id < $1.id} ]
                                     NotificationCenter.default.post(name: .advertisements, object: nil, userInfo: userInfo as [AnyHashable : Any] )
                                 case .details:
                                     let json = try JSONDecoder().decode(DetailsScreenData.self, from: data)

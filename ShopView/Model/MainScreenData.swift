@@ -6,7 +6,7 @@ struct MainScreenData: Decodable {
 }
 
 struct Advertisement: Decodable {
-    var id: String?
+    var id: String
     var title: String?
     var price: String?
     var location: String?
