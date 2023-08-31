@@ -8,6 +8,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     var mobileVersionLabel = UILabel()
     
     var offers: [Advertisement]?
+    var isEmpty = true
         
     override func viewWillAppear(_ animated: Bool) {
 
@@ -98,7 +99,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         guard let offers = notification.userInfo?[Notification.Name.advertisements] as? ([Advertisement]) else { return }
         self.offers = offers
         self.collectionView.reloadData()
-        print(offers)
+        isEmpty = false
     }
     
 }
@@ -113,7 +114,7 @@ extension MainScreen {
         case 0:
             return 1
         default:
-            return offers?.count ?? 0
+            return offers?.count ?? 20
         }
     }
     
@@ -156,12 +157,16 @@ extension MainScreen {
     }
     func cellView(_ index: Int) -> UIView {
         let cell = UIView()
-        let width = (self.view.frame.width/2) - 10
+        let width = (self.view.frame.width / 2)
         let cellView = UIImageView()
-        cellView.frame = CGRect(x: 10, y: 0, width: width - 30, height: width - 10)
+        
+        cellView.frame = CGRect(x: 5, y: 0, width: width - 20, height: width - 20)
         
         let loader = ImageLoader()
+        
         loader.frame = cellView.frame
+        loader.layer.cornerRadius = 10
+        loader.layer.masksToBounds = true
         
         cellView.addSubview(loader)
 
@@ -171,9 +176,21 @@ extension MainScreen {
         let firstLabel = UILabel()
         let secondLabel = UILabel()
         let thirdLabel = UILabel()
-        firstLabel.frame = CGRect(x: 20, y: width + 2, width: width - 20, height: 20)
-        secondLabel.frame = CGRect(x: 20, y: width + 22, width: width - 20, height: 20)
-        thirdLabel.frame = CGRect(x: 20, y: width + 42, width: width - 20, height: 18)
+        firstLabel.frame = CGRect(x: 10, y: width + 2, width: width - 20, height: 20)
+        secondLabel.frame = CGRect(x: 10, y: width + 22, width: width - 20, height: 20)
+        thirdLabel.frame = CGRect(x: 10, y: width + 42, width: width - 20, height: 18)
+        
+        if !isEmpty {
+            setClearColor(firstLabel)
+            setClearColor(secondLabel)
+            setClearColor(thirdLabel)
+            setClearColor(cellView)
+        } else {
+            setGrayColor(firstLabel)
+            setGrayColor(secondLabel)
+            setGrayColor(thirdLabel)
+            setGrayColor(cellView)
+        }
     
         secondLabel.font = .boldSystemFont(ofSize: 15)
         firstLabel.text = offers?[index].title ?? ""
@@ -187,6 +204,13 @@ extension MainScreen {
         cell.addSubview(thirdLabel)
   
         return cell
+    }
+    
+    func setClearColor(_ view: UIView) {
+        view.backgroundColor = .clear
+    }
+    func setGrayColor(_ view: UIView) {
+        view.backgroundColor = .lightGray
     }
     
 }

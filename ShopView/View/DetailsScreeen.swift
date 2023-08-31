@@ -64,27 +64,43 @@ class DetailsScreen: UIViewController {
         let detailsView = UIView()
         detailsView.frame = CGRect.init(x: 10, y: (view.frame.height + 104) / 2, width: view.frame.width - 20, height: (view.frame.height - 104) / 2)
         let descriptionLabel = UILabel()
-        let secondLabel = UILabel()
-        let thirdLabel = UILabel()
-        let description = UILabel()
-        descriptionLabel.frame = CGRect(x: 0, y: 0, width: detailsView.frame.width, height: 50)
-        secondLabel.frame = CGRect(x: 0, y: 52, width: detailsView.frame.width, height: 18)
-        thirdLabel.frame = CGRect(x: 0, y: 70, width: detailsView.frame.width, height: 20)
-        thirdLabel.frame = CGRect(x: 0, y: 90, width: detailsView.frame.width, height: 20)
+        let priceLabel = UILabel()
+        let locationLabel = UILabel()
+        let dateLabel = UILabel()
+        let contactsLabel = UILabel()
+        let phoneLabel = UILabel()
+        let addressLabel = UILabel()
+        descriptionLabel.frame = CGRect(x: 0, y: 40, width: detailsView.frame.width, height: 50)
+        priceLabel.frame = CGRect(x: 0, y: 92, width: detailsView.frame.width, height: 18)
+        locationLabel.frame = CGRect(x: 0, y: 0, width: detailsView.frame.width, height: 20)
+        addressLabel.frame = CGRect(x: 0, y: 20, width: detailsView.frame.width, height: 20)
+        contactsLabel.frame = CGRect(x: 0, y: 110, width: detailsView.frame.width, height: 20)
+        dateLabel.frame = CGRect(x: 0, y: 130, width: detailsView.frame.width, height: 20)
+        phoneLabel.frame = CGRect(x: 0, y: 150, width: detailsView.frame.width, height: 20)
     
-        descriptionLabel.text = details?.description ?? ""
+        descriptionLabel.text = details?.description
         descriptionLabel.numberOfLines = 5
-        secondLabel.text = details?.price ?? ""
-        secondLabel.font = .boldSystemFont(ofSize: 15)
+        priceLabel.text = details?.price
+        priceLabel.font = .boldSystemFont(ofSize: 15)
 
-        thirdLabel.text = details?.location
-        description.text = details?.address
-        thirdLabel.textColor = .gray
+        locationLabel.text = details?.location
+        dateLabel.text = details?.created_date
+        addressLabel.text = details?.address
+        contactsLabel.text = details?.email
+        phoneLabel.text = details?.phone_number
+        addressLabel.textColor = .gray
+        dateLabel.textColor = .gray
+        locationLabel.textColor = .gray
+        phoneLabel.textColor = .blue
+        contactsLabel.textColor = .blue
         
         detailsView.addSubview(descriptionLabel)
-        detailsView.addSubview(secondLabel)
-        detailsView.addSubview(thirdLabel)
-        detailsView.addSubview(description)
+        detailsView.addSubview(priceLabel)
+        detailsView.addSubview(locationLabel)
+        detailsView.addSubview(dateLabel)
+        detailsView.addSubview(addressLabel)
+        detailsView.addSubview(contactsLabel)
+        detailsView.addSubview(phoneLabel)
                 
         view.addSubview(detailsView)
     }
@@ -102,6 +118,8 @@ class DetailsScreen: UIViewController {
         loader.frame = CGRect.init(x: 10, y: 104, width: view.frame.width - 20, height: (view.frame.height - 104) / 2)
         
         view.addSubview(loader)
+        loader.layer.cornerRadius = 15
+        loader.layer.masksToBounds = true
 
         if let imgUrl = details?.image_url {
             loader.loadImageWithUrl(URL(string: imgUrl)!)
