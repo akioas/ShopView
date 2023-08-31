@@ -1,6 +1,6 @@
 
 import Foundation
-
+// Load data
 class LoadController {
     
     let mainUrl = "http://www.avito.st/s/interns-ios/main-page.json"

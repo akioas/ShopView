@@ -49,9 +49,10 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     }
                 
     func setupErrorView() {
+        
         let button = UIButton()
         button.frame = CGRect(x: (view.frame.width - 100) / 2, y: (view.frame.height - 44) / 2, width: 100, height: 20)
-        button.setTitle("Обновить", for: .normal)
+        button.setTitle("Ошибка", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .systemGray2
         button.layer.cornerRadius = 5
@@ -111,7 +112,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         collectionView.isHidden = false
         collectionView.superview?.bringSubviewToFront(collectionView)
     }
-    @objc func error(_ notification: Notification) {
+    @objc func error() {
         collectionView.isHidden = true
         errorView.isHidden = false
         errorView.superview?.bringSubviewToFront(errorView)

@@ -5,8 +5,11 @@ class DetailsScreen: UIViewController {
     var details: DetailsScreenData?
     var id: String?
     var errorView = UIView()
+    let detailsView = UIView()
+    var isEmpty = true
     
     let header = UILabel()
+    let button = UIButton()
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +43,7 @@ class DetailsScreen: UIViewController {
         view.backgroundColor = .white
         setupHeader()
         setupDetails()
+        setupErrorView()
     }
     
     func setupHeader() {
@@ -60,53 +64,73 @@ class DetailsScreen: UIViewController {
         self.dismiss(animated: false)
     }
     @objc func reload() {
+
         if let id = id {
             LoadController().getDetailsScreenData(id: id)
         }
     }
     func setupErrorView() {
-        let button = UIButton()
-        button.frame = CGRect(x: (view.frame.width - 100) / 2, y: (view.frame.height - 44) / 2, width: 100, height: 20)
-        button.setTitle("Обновить", for: .normal)
+
+        button.frame = CGRect(x: (view.frame.width - 100) / 2, y: (view.frame.height - 104) / 2, width: 100, height: 20)
+        button.setTitle("Ошибка", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .systemGray2
         button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(reload), for: .touchUpInside)
         errorView.addSubview(button)
         errorView.backgroundColor = .white
         view.addSubview(errorView)
         errorView.isHidden = true
+
     }
     
     func setupDetails() {
-        let detailsView = UIView()
+        
         let height = (view.frame.height - 104) / 2
         detailsView.frame = CGRect.init(x: 10, y: (view.frame.height + 104) / 2, width: view.frame.width - 20, height: height)
+        
         let descriptionLabel = UILabel()
         let priceLabel = UILabel()
         let locationLabel = UILabel()
         let dateLabel = UILabel()
         let contactsLabel = UILabel()
+        let descriptionHeaderLabel = UILabel()
+        let contactsHeaderLabel = UILabel()
         let phoneLabel = UILabel()
         let addressLabel = UILabel()
-        descriptionLabel.frame = CGRect(x: 0, y: 80, width: detailsView.frame.width, height: 50)
+        
+        descriptionLabel.frame = CGRect(x: 0, y: 115, width: detailsView.frame.width, height: 50)
+        descriptionHeaderLabel.frame = CGRect(x: 0, y: 80, width: detailsView.frame.width, height: 50)
         priceLabel.frame = CGRect(x: 0, y: 60, width: detailsView.frame.width, height: 18)
         locationLabel.frame = CGRect(x: 0, y: 10, width: 250, height: 20)
         addressLabel.frame = CGRect(x: 0, y: 30, width: 250, height: 20)
+        contactsHeaderLabel.frame = CGRect(x: 0, y: height - 105, width: detailsView.frame.width, height: 20)
         contactsLabel.frame = CGRect(x: 0, y: height - 80, width: detailsView.frame.width, height: 20)
         dateLabel.frame = CGRect(x: detailsView.frame.width - 140, y: 10, width: 140, height: 20)
         phoneLabel.frame = CGRect(x: 0, y: height - 60, width: detailsView.frame.width, height: 20)
     
         descriptionLabel.text = details?.description
         descriptionLabel.numberOfLines = 5
+        
         priceLabel.text = details?.price
         priceLabel.font = .boldSystemFont(ofSize: 15)
+        
         dateLabel.text = details?.created_date
         dateLabel.textAlignment = .right
+        
         locationLabel.text = details?.location
+        
         addressLabel.text = details?.address
+        
         contactsLabel.text = details?.email
+        
+        contactsHeaderLabel.font = .boldSystemFont(ofSize: 20)
+        contactsHeaderLabel.text = "Контакты"
+        
+        descriptionHeaderLabel.font = .boldSystemFont(ofSize: 20)
+        descriptionHeaderLabel.text = "Описание"
+        
         phoneLabel.text = details?.phone_number
+        
         addressLabel.textColor = .gray
         dateLabel.textColor = .gray
         locationLabel.textColor = .gray
@@ -114,18 +138,21 @@ class DetailsScreen: UIViewController {
         contactsLabel.textColor = .blue
         
         detailsView.addSubview(descriptionLabel)
+        detailsView.addSubview(descriptionHeaderLabel)
         detailsView.addSubview(priceLabel)
         detailsView.addSubview(locationLabel)
         detailsView.addSubview(dateLabel)
         detailsView.addSubview(addressLabel)
         detailsView.addSubview(contactsLabel)
+        detailsView.addSubview(contactsHeaderLabel)
         detailsView.addSubview(phoneLabel)
-                
+            
         view.addSubview(detailsView)
     }
     
-    @objc func error(_ notification: Notification) {
+    @objc func error() {
         errorView.isHidden = false
+        detailsView.isHidden = true
         errorView.superview?.bringSubviewToFront(errorView)
     }
     
@@ -150,6 +177,9 @@ class DetailsScreen: UIViewController {
         header.text = self.details?.title
         setupDetails()
         errorView.isHidden = true
+        isEmpty = false
+        detailsView.isHidden = false
+
     }
     
 }
