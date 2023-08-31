@@ -5,6 +5,7 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     let cellID = "cell"
     let headerID = "header"
     var collectionView: UICollectionView! = nil
+    var errorView = UIView()
     var mobileVersionLabel = UILabel()
     
     var offers: [Advertisement]?
@@ -30,7 +31,8 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         super.viewDidLoad()
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.getOffers(_:)), name: Notification.Name.advertisements, object: nil)
-        LoadController().getMainScreenData()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.error), name: Notification.Name.error, object: nil)
+        reload()
         
         self.navigationController?.isNavigationBarHidden = true
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
@@ -42,15 +44,21 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         collectionView.backgroundColor = .white
         collectionView.frame = CGRect.init(x: 0, y: 44, width: self.view.frame.width, height: self.view.frame.height - 44 )
         view.addSubview(collectionView)
+        setupErrorView()
     
     }
-    
-    func setupLoadView() {
-        
-    }
-    
+                
     func setupErrorView() {
-        
+        let button = UIButton()
+        button.frame = CGRect(x: (view.frame.width - 100) / 2, y: (view.frame.height - 44) / 2, width: 100, height: 20)
+        button.setTitle("Обновить", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .systemGray2
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(reload), for: .touchUpInside)
+        errorView.addSubview(button)
+        view.addSubview(errorView)
+        errorView.isHidden = true
     }
     
     func createLayout() -> UICollectionViewLayout {
@@ -95,12 +103,23 @@ class MainScreen: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     }
     
     @objc func getOffers(_ notification: Notification) {
-        
+
         guard let offers = notification.userInfo?[Notification.Name.advertisements] as? ([Advertisement]) else { return }
         self.offers = offers
         self.collectionView.reloadData()
         isEmpty = false
+        collectionView.isHidden = false
+        collectionView.superview?.bringSubviewToFront(collectionView)
     }
+    @objc func error(_ notification: Notification) {
+        collectionView.isHidden = true
+        errorView.isHidden = false
+        errorView.superview?.bringSubviewToFront(errorView)
+    }
+    @objc func reload() {
+        LoadController().getMainScreenData()
+    }
+    
     
 }
 

@@ -3,7 +3,7 @@ import Foundation
 
 class LoadController {
     
-    let mainUrl = "https://www.avito.st/s/interns-ios/main-page.json"
+    let mainUrl = "http://www.avito.st/s/interns-ios/main-page.json"
     let detailsUrl = "https://www.avito.st/s/interns-ios/details/{itemId}.json"
     let replaceDetailsUrl = "{itemId}"
     
