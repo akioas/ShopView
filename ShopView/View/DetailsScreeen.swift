@@ -4,6 +4,7 @@ class DetailsScreen: UIViewController {
    
     var details: DetailsScreenData?
     var id: String?
+    var errorView = UIView()
     
     let header = UILabel()
     
@@ -29,9 +30,8 @@ class DetailsScreen: UIViewController {
         setupView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getDetails(_:)), name: Notification.Name.details, object: nil)
-        if let id = id {
-            LoadController().getDetailsScreenData(id: id)
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(self.error), name: Notification.Name.error, object: nil)
+        reload()
         
     
     }
@@ -59,10 +59,29 @@ class DetailsScreen: UIViewController {
     @objc func back() {
         self.dismiss(animated: false)
     }
+    @objc func reload() {
+        if let id = id {
+            LoadController().getDetailsScreenData(id: id)
+        }
+    }
+    func setupErrorView() {
+        let button = UIButton()
+        button.frame = CGRect(x: (view.frame.width - 100) / 2, y: (view.frame.height - 44) / 2, width: 100, height: 20)
+        button.setTitle("Обновить", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .systemGray2
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(reload), for: .touchUpInside)
+        errorView.addSubview(button)
+        errorView.backgroundColor = .white
+        view.addSubview(errorView)
+        errorView.isHidden = true
+    }
     
     func setupDetails() {
         let detailsView = UIView()
-        detailsView.frame = CGRect.init(x: 10, y: (view.frame.height + 104) / 2, width: view.frame.width - 20, height: (view.frame.height - 104) / 2)
+        let height = (view.frame.height - 104) / 2
+        detailsView.frame = CGRect.init(x: 10, y: (view.frame.height + 104) / 2, width: view.frame.width - 20, height: height)
         let descriptionLabel = UILabel()
         let priceLabel = UILabel()
         let locationLabel = UILabel()
@@ -70,21 +89,21 @@ class DetailsScreen: UIViewController {
         let contactsLabel = UILabel()
         let phoneLabel = UILabel()
         let addressLabel = UILabel()
-        descriptionLabel.frame = CGRect(x: 0, y: 40, width: detailsView.frame.width, height: 50)
-        priceLabel.frame = CGRect(x: 0, y: 92, width: detailsView.frame.width, height: 18)
-        locationLabel.frame = CGRect(x: 0, y: 0, width: detailsView.frame.width, height: 20)
-        addressLabel.frame = CGRect(x: 0, y: 20, width: detailsView.frame.width, height: 20)
-        contactsLabel.frame = CGRect(x: 0, y: 110, width: detailsView.frame.width, height: 20)
-        dateLabel.frame = CGRect(x: 0, y: 130, width: detailsView.frame.width, height: 20)
-        phoneLabel.frame = CGRect(x: 0, y: 150, width: detailsView.frame.width, height: 20)
+        descriptionLabel.frame = CGRect(x: 0, y: 80, width: detailsView.frame.width, height: 50)
+        priceLabel.frame = CGRect(x: 0, y: 60, width: detailsView.frame.width, height: 18)
+        locationLabel.frame = CGRect(x: 0, y: 10, width: 250, height: 20)
+        addressLabel.frame = CGRect(x: 0, y: 30, width: 250, height: 20)
+        contactsLabel.frame = CGRect(x: 0, y: height - 80, width: detailsView.frame.width, height: 20)
+        dateLabel.frame = CGRect(x: detailsView.frame.width - 140, y: 10, width: 140, height: 20)
+        phoneLabel.frame = CGRect(x: 0, y: height - 60, width: detailsView.frame.width, height: 20)
     
         descriptionLabel.text = details?.description
         descriptionLabel.numberOfLines = 5
         priceLabel.text = details?.price
         priceLabel.font = .boldSystemFont(ofSize: 15)
-
-        locationLabel.text = details?.location
         dateLabel.text = details?.created_date
+        dateLabel.textAlignment = .right
+        locationLabel.text = details?.location
         addressLabel.text = details?.address
         contactsLabel.text = details?.email
         phoneLabel.text = details?.phone_number
@@ -105,12 +124,9 @@ class DetailsScreen: UIViewController {
         view.addSubview(detailsView)
     }
     
-    func setupLoadView() {
-        
-    }
-    
-    func setupErrorView() {
-        
+    @objc func error(_ notification: Notification) {
+        errorView.isHidden = false
+        errorView.superview?.bringSubviewToFront(errorView)
     }
     
     func setupImage() {
@@ -133,7 +149,7 @@ class DetailsScreen: UIViewController {
         setupImage()
         header.text = self.details?.title
         setupDetails()
-
+        errorView.isHidden = true
     }
     
 }
