@@ -131,7 +131,7 @@ extension MainScreen {
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: headerID, for: indexPath) as UICollectionViewCell
-            cell.addSubview(addObjectView())
+            cell.addSubview(topView())
             return cell
             
         default:
@@ -141,19 +141,31 @@ extension MainScreen {
             
         }
     }
-    func addObjectView() -> UIView {
-        let addObjectView = UIView()
-        addObjectView.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.width, height: 60)
-        let button = UIButton()
-        button.frame = CGRect.init(x: 50, y: 10, width: self.view.frame.width - 100, height: 50)
-        button.setTitle("З", for: .normal)
-//        button.addTarget(self, action: #selector(addObject), for: .touchUpInside)
-        button.setTitleColor(.blue, for: .normal)
-        button.backgroundColor = UIColor(cgColor: CGColor.init(red: 90 / 100, green: 94 / 100, blue: 100 / 100, alpha: 1.0))
-        button.layer.cornerRadius = 5
-        addObjectView.addSubview(button)
+    func topView() -> UIView {
+        let topView = UIView()
+        topView.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.width, height: 60)
+        let textField = TextField()
+        textField.frame = CGRect.init(x: 10, y: 10, width: self.view.frame.width - 80, height: 50)
+        textField.layer.cornerRadius = 15
+        textField.placeholder = "Поиск"
+        textField.backgroundColor = .systemGray6
+        
+        let glassImage = UIImage(systemName: "magnifyingglass")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
+        let imgView = UIImageView()
+        imgView.frame = CGRect.init(x: 10, y: 15, width: 20, height: 20)
+        imgView.image = glassImage
+        
+        
+        let cart = UIImageView()
+        cart.frame = CGRect.init(x: self.view.frame.width - 50, y: 20, width: 30, height: 30)
+        let cartImage = UIImage(systemName: "basket")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
+        cart.image = cartImage
+        
+        textField.addSubview(imgView)
+        topView.addSubview(textField)
+        topView.addSubview(cart)
                         
-        return addObjectView
+        return topView
     }
     func cellView(_ index: Int) -> UIView {
         let cell = UIView()
@@ -176,9 +188,9 @@ extension MainScreen {
         let firstLabel = UILabel()
         let secondLabel = UILabel()
         let thirdLabel = UILabel()
-        firstLabel.frame = CGRect(x: 10, y: width + 2, width: width - 20, height: 20)
-        secondLabel.frame = CGRect(x: 10, y: width + 22, width: width - 20, height: 20)
-        thirdLabel.frame = CGRect(x: 10, y: width + 42, width: width - 20, height: 18)
+        firstLabel.frame = CGRect(x: 10, y: width - 18, width: width - 20, height: 20)
+        secondLabel.frame = CGRect(x: 10, y: width + 4, width: width - 20, height: 20)
+        thirdLabel.frame = CGRect(x: 10, y: width + 24, width: width - 20, height: 18)
         
         if !isEmpty {
             setClearColor(firstLabel)
